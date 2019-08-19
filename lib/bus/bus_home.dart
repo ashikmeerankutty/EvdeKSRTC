@@ -1,3 +1,4 @@
+import 'package:findmybus/bus/search_result.dart';
 import 'package:flutter/material.dart';
 
 class BusHome extends StatefulWidget {
@@ -13,7 +14,8 @@ class _BusHomeState extends State<BusHome> {
 
   void _searchBus()
   {
-    
+    Navigator.push(context,
+    MaterialPageRoute(builder: (context) => ResultPage()));
   }
 
   @override
@@ -78,7 +80,7 @@ class _BusHomeState extends State<BusHome> {
                     ),
                   ),
                   RaisedButton(
-                    onPressed: (){},
+                    onPressed: _searchBus,
                     child: Text('FIND BUS'),
                   )
                 ],
