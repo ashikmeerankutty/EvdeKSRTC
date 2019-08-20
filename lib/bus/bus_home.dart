@@ -1,4 +1,4 @@
-import 'package:findmybus/bus/search_result.dart';
+import 'package:findmybus/search/search.dart';
 import 'package:flutter/material.dart';
 
 class BusHome extends StatefulWidget {
@@ -15,7 +15,7 @@ class _BusHomeState extends State<BusHome> {
   void _searchBus()
   {
     Navigator.push(context,
-    MaterialPageRoute(builder: (context) => ResultPage()));
+    MaterialPageRoute(builder: (context) => ResultPage(sourceController.text,destinationController.text)));
   }
 
   @override
