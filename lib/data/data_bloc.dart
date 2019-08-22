@@ -31,7 +31,7 @@ class DataBloc extends Bloc<DataEvents,DataState>{
 }
 
 Future<List<dynamic>> _fetchData()async{
-  final response = await http.get(DotEnv().env['LOCATION_URL']);
+  final response = await http.get('http://localhost:3000/locations');
   if (response.statusCode == 200) {
     final rawData = json.decode(response.body);
     final data =  rawData[0]['locations'];
