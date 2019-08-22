@@ -61,7 +61,7 @@ class _AppState extends State<App> {
                 if( state is DataFetched){
                   return MaterialApp(
                       theme: ThemeData(primaryColor: Colors.white),
-                      home: BusHome(),
+                      home: BusHome(searchData: state.searchData,),
                     );
                 }
               },
