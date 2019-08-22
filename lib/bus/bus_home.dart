@@ -1,21 +1,39 @@
 import 'package:findmybus/search/search.dart';
 import 'package:flutter/material.dart';
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 
 class BusHome extends StatefulWidget {
-  
+  final List<dynamic> searchData;
+  BusHome({this.searchData});
   @override
   _BusHomeState createState() => _BusHomeState();
 }
 
 class _BusHomeState extends State<BusHome> {
-
   final sourceController = new TextEditingController();
   final destinationController = new TextEditingController();
 
-  void _searchBus()
-  {
-    Navigator.push(context,
-    MaterialPageRoute(builder: (context) => ResultPage(sourceController.text,destinationController.text)));
+  GlobalKey<AutoCompleteTextFieldState<String>> key = new GlobalKey();
+  GlobalKey<AutoCompleteTextFieldState<String>> destKey = new GlobalKey();
+
+  List<String> destinations;
+  String currentText = "";
+
+  void _searchBus() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                ResultPage(sourceController.text, destinationController.text)));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    List<String> data = widget.searchData.map((f) => f.toString()).toList();
+    setState(() {
+      destinations = data;
+    });
   }
 
   @override
@@ -41,8 +59,14 @@ class _BusHomeState extends State<BusHome> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
-                    child: TextField(
+                    child: SimpleAutoCompleteTextField(
+                      key: key,
                       controller: sourceController,
+                      suggestions: destinations,
+                      submitOnSuggestionTap: true,
+                      textChanged:(text) => {},
+                      textSubmitted: (text) => {},
+                      clearOnSubmit: false,
                       decoration: InputDecoration(
                           contentPadding: EdgeInsets.all(15.0),
                           border: OutlineInputBorder(
@@ -61,23 +85,29 @@ class _BusHomeState extends State<BusHome> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20.0),
-                    child: TextField(
+                    child: SimpleAutoCompleteTextField(
+                      key: destKey,
                       controller: destinationController,
+                      suggestions: destinations,
+                      textChanged:(text) => {},
+                      submitOnSuggestionTap: true,
+                      textSubmitted: (text) => {},
+                      clearOnSubmit: false,
                       decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(15.0),
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(5.0)),
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(5.0)),
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          hintStyle: TextStyle(fontWeight: FontWeight.bold),
-                          hintText: "Destination"),
-                    ),
+                        contentPadding: EdgeInsets.all(15.0),
+                        border: OutlineInputBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(5.0)),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(5.0)),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        hintStyle: TextStyle(fontWeight: FontWeight.bold),
+                        hintText: "Destination"),
+                      ),
                   ),
                   RaisedButton(
                     onPressed: _searchBus,
