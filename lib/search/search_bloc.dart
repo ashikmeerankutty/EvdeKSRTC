@@ -31,9 +31,7 @@ class SearchBloc extends Bloc<SearchEvent,SearchState> {
 }
 
 Future<List<Routes>>_fetchRoutes(String source,String destination) async {
-  print(source);
-  print(destination);
-  final response = await http.post(DotEnv().env['LOCATION_URL'],body:{
+  final response = await http.post('http://localhost:3000/route',body:{
     "source" : source,
 	  "destination" : destination
   });
