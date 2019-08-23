@@ -1,3 +1,4 @@
+import 'package:findmybus/models/routes.dart';
 import 'package:findmybus/search/search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -73,8 +74,17 @@ class _ResultPageState extends State<ResultPage> {
                   child: ListView.builder(
                       itemCount: state.routes.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return busListItem(state.routes[index], widget.source,
-                            widget.destination);
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => RouteDetails(
+                                        route: state.routes[index])));
+                          },
+                          child: busListItem(state.routes[index], widget.source,
+                              widget.destination),
+                        );
                       }),
                 ),
               ),
@@ -112,8 +122,12 @@ Widget busListItem(route, source, destination) {
               Row(
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(left: 3.0,top: 2.0,bottom: 2.0),
-                    child: Text(route.type.toUpperCase(),style: TextStyle(color: Colors.grey.shade700),),
+                    padding:
+                        const EdgeInsets.only(left: 3.0, top: 2.0, bottom: 2.0),
+                    child: Text(
+                      route.type.toUpperCase(),
+                      style: TextStyle(color: Colors.grey.shade700),
+                    ),
                   )
                 ],
               ),
@@ -130,7 +144,10 @@ Widget busListItem(route, source, destination) {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(top: 6.0, left: 4.0),
-                    child: Text('${route.destinations[source]["time"]} from $source',style: TextStyle(color: Colors.grey.shade700),),
+                    child: Text(
+                      '${route.destinations[source]["time"]} from $source',
+                      style: TextStyle(color: Colors.grey.shade700),
+                    ),
                   ),
                 ],
               )
@@ -139,12 +156,76 @@ Widget busListItem(route, source, destination) {
           Column(
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(right:8.0),
-                child: Icon(Icons.chevron_right,size: 40.0,),
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Icon(
+                  Icons.chevron_right,
+                  size: 40.0,
+                ),
               )
             ],
           )
         ],
+      ),
+    ),
+  );
+}
+
+class RouteDetails extends StatefulWidget {
+  final Routes route;
+  RouteDetails({this.route});
+  @override
+  _RouteDetailsState createState() => _RouteDetailsState();
+}
+
+class _RouteDetailsState extends State<RouteDetails> {
+  List<dynamic> destinations;
+  List<String> time;
+
+  @override
+  void initState() {
+    super.initState();
+    List<dynamic> dest = new List();
+    List<String> tim = new List();
+    widget.route.destinations.forEach((key, value) {
+      dest.add(key);
+      tim.add(value["time"]);
+    });
+    setState(() {
+      destinations = dest;
+      time = tim;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+          child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: true,
+          title: Text(
+            widget.route.route,
+            style: TextStyle(fontSize: 16.0),
+          ),
+        ),
+        body: Container(
+          child: ListView.builder(
+              itemCount: widget.route.destinations.length,
+              itemBuilder: (BuildContext context, int index) {
+                return detailTile(destinations, time, index);
+              }),
+        ),
+      ),
+    );
+  }
+}
+
+Widget detailTile(destinations, time, index) {
+  return Container(
+    child: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[Text(destinations[index]), Text(time[index])],
       ),
     ),
   );
