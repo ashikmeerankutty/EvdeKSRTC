@@ -6,7 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ResultPage extends StatefulWidget {
   final String source;
   final String destination;
-  ResultPage(this.source, this.destination);
+  final String type;
+  ResultPage(this.source, this.destination,this.type);
   @override
   _ResultPageState createState() => _ResultPageState();
 }
@@ -27,7 +28,7 @@ class _ResultPageState extends State<ResultPage> {
       builder: (BuildContext context, state) {
         if (state is RoutesUninitialized) {
           _searchBloc.dispatch(
-              Fetch(source: widget.source, destination: widget.destination));
+              Fetch(source: widget.source, destination: widget.destination,type:widget.type));
           return SafeArea(
             child: Scaffold(
               body: Center(
@@ -115,7 +116,7 @@ Widget busListItem(route, source, destination) {
                   Icon(Icons.directions_bus),
                   Padding(
                     padding: const EdgeInsets.only(left: 3.0),
-                    child: Text(route.route),
+                    child: (route.route.length>40)?Text(route.route.substring(0,40)):Text(route.route),
                   )
                 ],
               ),
@@ -136,7 +137,7 @@ Widget busListItem(route, source, destination) {
                   Padding(
                     padding: const EdgeInsets.only(top: 6.0, left: 4.0),
                     child: Text(
-                        '${route.destinations[source]["time"]} - ${route.destinations[destination]["time"]}'),
+                        '${formatTime(route.destinations[source]["time"])} - ${formatTime(route.destinations[destination]["time"])}'),
                   )
                 ],
               ),
@@ -145,7 +146,7 @@ Widget busListItem(route, source, destination) {
                   Padding(
                     padding: const EdgeInsets.only(top: 6.0, left: 4.0),
                     child: Text(
-                      '${route.destinations[source]["time"]} from $source',
+                      '${formatTime(route.destinations[source]["time"])} from $source',
                       style: TextStyle(color: Colors.grey.shade700),
                     ),
                   ),
@@ -188,14 +189,13 @@ class _RouteDetailsState extends State<RouteDetails> {
     List<String> tim = new List();
     widget.route.destinations.forEach((key, value) {
       dest.add(key);
-      tim.add(value["time"]);
+      tim.add(formatTime(value["time"]));
     });
     setState(() {
       destinations = dest;
       time = tim;
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -230,3 +230,16 @@ Widget detailTile(destinations, time, index) {
     ),
   );
 }
+
+
+formatTime(String time)
+  {
+    RegExp exp = new RegExp(r"([0-9]+):([0-9]+):([0-9]+)");
+    Iterable<RegExpMatch> matches = exp.allMatches(time);
+    var match = matches.elementAt(0);
+    int hour =  int.parse(match.group(1));
+    if(hour>12)
+      return "${hour-12}:${match.group(2)} PM";
+    else
+      return "$hour:${match.group(2)} AM";
+  }

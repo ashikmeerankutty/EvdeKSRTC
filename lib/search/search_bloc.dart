@@ -15,11 +15,11 @@ class SearchBloc extends Bloc<SearchEvent,SearchState> {
     if(event is Fetch){
       try{
         if(currentState is RoutesUninitialized){
-          final routes = await _fetchRoutes(event.source,event.destination);
+          final routes = await _fetchRoutes(event.source,event.destination,event.type);
           yield RoutesLoaded(routes:routes);
         }
         if(currentState is RoutesLoaded){
-          final routes = await _fetchRoutes(event.source,event.destination);
+          final routes = await _fetchRoutes(event.source,event.destination,event.type);
           yield RoutesLoaded(routes:routes);
         }
       }catch(_){
@@ -30,10 +30,12 @@ class SearchBloc extends Bloc<SearchEvent,SearchState> {
   }
 }
 
-Future<List<Routes>>_fetchRoutes(String source,String destination) async {
+Future<List<Routes>>_fetchRoutes(String source,String destination,String type) async {
   final response = await http.post('http://localhost:3000/route',body:{
     "source" : source,
-	  "destination" : destination
+	  "destination" : destination,
+    "type" : type
+
   });
   if (response.statusCode == 200) {
     final rawData = json.decode(response.body) as List;

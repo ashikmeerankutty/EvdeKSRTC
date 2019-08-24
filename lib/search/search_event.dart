@@ -8,7 +8,8 @@ class Fetch extends SearchEvent
 {
   final String source;
   final String destination;
-  Fetch({this.source,this.destination}):super([source,destination]);
+  final String type;
+  Fetch({this.source,this.destination,this.type}):super([source,destination,type]);
   @override
   String toString() => 'Fetch';
 }
