@@ -1,4 +1,4 @@
-# EvdeKSRTC
+# 🚌 EvdeKSRTC
 App to find KSRTC bus between two destinations
 
 ## Screenshots
