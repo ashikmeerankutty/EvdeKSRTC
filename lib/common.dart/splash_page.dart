@@ -12,14 +12,14 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-      color: Color(0xff2658B9),
+      color: Color(0xffFA5D5D),
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       child: Align(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text("FIND MY BUS",
+            Text("EVIDE KSRTC?",
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 35.0,
