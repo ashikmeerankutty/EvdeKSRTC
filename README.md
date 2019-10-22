@@ -1,5 +1,5 @@
 # 🚌 EvdeKSRTC
-App to find KSRTC bus between two destinations
+App to find KSRTC bus between two destinations. Enter the source and destination. App shows all buses available between the source and destination.
 
 ## Screenshots
 
